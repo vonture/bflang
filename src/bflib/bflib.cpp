@@ -49,3 +49,21 @@ bool bf_tokens_destroy(bf_tokens *tokens) {
 
     return true;
 }
+
+bf_ast *bf_generate_ast(bf_tokens *tokens, const bf_ast_options *options, bf_user_data user_data, bf_error_func error_func) {
+    return nullptr;
+}
+
+bool bf_ast_get_type(bf_ast *ast, bf_ast_type *type) { return false; }
+
+bool bf_ast_get_location(bf_ast *ast, bf_source_location *location) { return false; }
+
+bool bf_ast_sequence_get_child_count(bf_ast *ast, int *count) { return false; }
+
+bool bf_ast_sequence_get_children(bf_ast *ast, int first, int count, bf_ast *children) { return false; }
+
+bool bf_ast_branch_get_child(bf_ast *ast, bf_ast *child) { return false; }
+
+bool bf_ast_operation_get_operation_type(bf_ast *ast, bf_ast_operation_type *type) { return false; }
+
+bool bf_ast_destroy(bf_ast *ast) { return false; }

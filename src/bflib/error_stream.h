@@ -15,8 +15,8 @@ class error_stream {
     void emit_error(const source_location &start_loc, const source_location &end_loc, const std::string &msg);
 
   private:
-    bf_user_data user_data_ = nullptr;
-    bf_error_func error_func_ = nullptr;
+    bf_user_data user_data_;
+    bf_error_func error_func_;
 };
 
 } // namespace bf

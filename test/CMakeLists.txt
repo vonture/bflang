@@ -1,4 +1,5 @@
 add_executable(bflib_tests
+    ast_tests.cpp
     tokenizer_tests.cpp
 )
 

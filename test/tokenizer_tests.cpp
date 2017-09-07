@@ -1,20 +1,10 @@
 #include "bflib.h"
+#include "bflib_raii.h"
 
 #include <array>
 #include <gtest/gtest.h>
-#include <memory>
 
-namespace {
-
-struct tokens_deleter {
-    void operator()(bf_tokens *tokens) {
-        if (tokens) {
-            EXPECT_TRUE(bf_tokens_destroy(tokens));
-        }
-    }
-};
-
-using unique_tokens_ptr = std::unique_ptr<bf_tokens, tokens_deleter>;
+namespace bf {
 
 TEST(tokenizer, null_program) { ASSERT_EQ(nullptr, bf_tokenize(nullptr, nullptr, nullptr, nullptr)); }
 
@@ -131,4 +121,4 @@ TEST(tokenizer, token_location) {
     }
 }
 
-} // namespace
+} // namespace bf
