@@ -1,5 +1,6 @@
 #include "tokenizer.h"
 
+#include <assert.h>
 #include <memory>
 
 namespace bf {
@@ -12,10 +13,13 @@ void tokens::add_token(token_type type, source_location location) {
 
 const std::vector<token> &tokens::get_tokens() const { return tokens_; }
 
-tokens *tokenize(const char *program, const tokenizer_options *options, error_stream error_func) {
-    if (program == nullptr) {
-        return nullptr;
-    }
+tokenizer_options default_tokenizer_options() {
+    tokenizer_options options;
+    return options;
+}
+
+tokens *tokenize(const char *program, const tokenizer_options &options, error_stream &error_stream) {
+    assert(program != nullptr);
 
     std::unique_ptr<bf::tokens> tokens = std::make_unique<bf::tokens>();
 

@@ -1,11 +1,18 @@
 #include "bflib.h"
 
+#include "error_stream.h"
 #include "tokenizer.h"
 
 #include <exception>
 
-bf_tokens *bf_tokenize(const char *program, const bf_tokenizer_options *options, bf_error_stream error_stream) {
-    return bf::tokenize(program, options, error_stream);
+bf_tokens *bf_tokenize(const char *program, const bf_tokenizer_options *options, bf_user_data user_data, bf_error_func error_func) {
+    if (program == nullptr) {
+        return nullptr;
+    }
+
+    bf::error_stream error_stream(user_data, error_func);
+    const bf::tokenizer_options &resolved_options = options ? *options : bf::default_tokenizer_options();
+    return bf::tokenize(program, resolved_options, error_stream);
 }
 
 bool bf_tokens_get_token_count(bf_tokens *tokens, int *count) {

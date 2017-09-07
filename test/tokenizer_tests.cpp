@@ -16,7 +16,7 @@ struct tokens_deleter {
 
 using unique_tokens_ptr = std::unique_ptr<bf_tokens, tokens_deleter>;
 
-TEST(tokenizer, null_program) { ASSERT_EQ(nullptr, bf_tokenize(nullptr, nullptr, nullptr)); }
+TEST(tokenizer, null_program) { ASSERT_EQ(nullptr, bf_tokenize(nullptr, nullptr, nullptr, nullptr)); }
 
 TEST(tokenizer, null_tokens) {
     int count = 0;
@@ -29,7 +29,7 @@ TEST(tokenizer, null_tokens) {
 }
 
 TEST(tokenizer, invalid_offsets) {
-    unique_tokens_ptr tokens(bf_tokenize("++", nullptr, nullptr));
+    unique_tokens_ptr tokens(bf_tokenize("++", nullptr, nullptr, nullptr));
     ASSERT_NE(nullptr, tokens);
 
     bf_token tokens_array[4];
@@ -46,7 +46,7 @@ TEST(tokenizer, invalid_offsets) {
 TEST(tokenizer, hello_world) {
     constexpr const char *program =
         "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.";
-    unique_tokens_ptr tokens(bf_tokenize(program, nullptr, nullptr));
+    unique_tokens_ptr tokens(bf_tokenize(program, nullptr, nullptr, nullptr));
     ASSERT_NE(nullptr, tokens);
 
     int token_count = -1;
