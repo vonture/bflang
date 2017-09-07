@@ -1,7 +1,7 @@
 #ifndef BFLIB_H_
 #define BFLIB_H_
 
-typedef void(*bf_error_stream)(const char*);
+typedef void (*bf_error_stream)(const char *);
 
 enum bf_token_type {
     bf_token_inc_data_ptr,
@@ -20,11 +20,11 @@ struct bf_token {
     int character;
 };
 
-typedef void* bf_tokens;
+typedef void *bf_tokens;
 
-bf_tokens bf_tokenize(const char* program, bf_error_stream error_stream);
+bf_tokens bf_tokenize(const char *program, bf_error_stream error_stream);
 int bf_tokens_get_token_count(bf_tokens tokens);
-bool bf_tokens_get_token_count(bf_tokens tokens, int count, bf_token* token_ptr);
+bool bf_tokens_get_token_count(bf_tokens tokens, int count, bf_token *token_ptr);
 bool bf_tokens_destroy(bf_tokens tokens);
 
 #endif // BFLIB_H_
