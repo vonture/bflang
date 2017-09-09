@@ -11,7 +11,12 @@ void tokens::add_token(token_type type, source_location location) {
     tokens_.emplace_back(t);
 }
 
-const std::vector<token> &tokens::get_tokens() const { return tokens_; }
+const token &tokens::get_token(int index) const {
+    assert(index >= 0 && index < tokens_.size());
+    return tokens_[index];
+}
+
+int tokens::get_tokens_count() const { return tokens_.size(); }
 
 tokenizer_options default_tokenizer_options() {
     tokenizer_options options;

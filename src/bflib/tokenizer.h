@@ -16,7 +16,9 @@ tokenizer_options default_tokenizer_options();
 class tokens {
   public:
     void add_token(token_type type, source_location location);
-    const std::vector<token> &get_tokens() const;
+
+    const token &get_token(int index) const;
+    int get_tokens_count() const;
 
   private:
     std::vector<token> tokens_;

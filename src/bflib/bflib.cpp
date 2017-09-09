@@ -1,5 +1,6 @@
 #include "bflib.h"
 
+#include "ast.h"
 #include "error_stream.h"
 #include "tokenizer.h"
 
@@ -15,30 +16,6 @@ bf_tokens *bf_tokenize(const char *program, const bf_tokenizer_options *options,
     return bf::tokenize(program, resolved_options, error_stream);
 }
 
-bool bf_tokens_get_token_count(bf_tokens *tokens, int *count) {
-    if (tokens == nullptr || count == nullptr) {
-        return false;
-    }
-
-    bf::tokens *tokens_object = reinterpret_cast<bf::tokens *>(tokens);
-    *count = static_cast<int>(tokens_object->get_tokens().size());
-    return true;
-}
-
-bool bf_tokens_get_tokens(bf_tokens *tokens, int first, int count, bf_token *token_ptr) {
-    if (tokens == nullptr || first < 0 || count < 0 || token_ptr == nullptr) {
-        return false;
-    }
-
-    const auto &tokens_vector = reinterpret_cast<bf::tokens *>(tokens)->get_tokens();
-    if (first + count > static_cast<int>(tokens_vector.size())) {
-        return false;
-    }
-
-    std::copy(tokens_vector.begin() + first, tokens_vector.begin() + first + count, token_ptr);
-    return true;
-}
-
 bool bf_tokens_destroy(bf_tokens *tokens) {
     if (tokens == nullptr) {
         return false;
@@ -50,20 +27,149 @@ bool bf_tokens_destroy(bf_tokens *tokens) {
     return true;
 }
 
-bf_ast *bf_generate_ast(bf_tokens *tokens, const bf_ast_options *options, bf_user_data user_data, bf_error_func error_func) {
-    return nullptr;
+bool bf_tokens_get_token_count(const bf_tokens *tokens, int *count) {
+    if (tokens == nullptr || count == nullptr) {
+        return false;
+    }
+
+    const bf::tokens *tokens_object = reinterpret_cast<const bf::tokens *>(tokens);
+    *count = tokens_object->get_tokens_count();
+    return true;
 }
 
-bool bf_ast_get_type(bf_ast *ast, bf_ast_type *type) { return false; }
+bool bf_tokens_get_tokens(const bf_tokens *tokens, int first, int count, bf_token *token_ptr) {
+    if (tokens == nullptr || first < 0 || count < 0 || token_ptr == nullptr) {
+        return false;
+    }
 
-bool bf_ast_get_location(bf_ast *ast, bf_source_location *location) { return false; }
+    const bf::tokens *tokens_object = reinterpret_cast<const bf::tokens *>(tokens);
+    if (first + count > tokens_object->get_tokens_count()) {
+        return false;
+    }
 
-bool bf_ast_sequence_get_child_count(bf_ast *ast, int *count) { return false; }
+    for (int i = 0; i < count; i++) {
+        token_ptr[i] = tokens_object->get_token(first + i);
+    }
 
-bool bf_ast_sequence_get_children(bf_ast *ast, int first, int count, bf_ast *children) { return false; }
+    return true;
+}
 
-bool bf_ast_branch_get_child(bf_ast *ast, bf_ast *child) { return false; }
+bf_ast *bf_generate_ast(const bf_tokens *tokens, const bf_ast_options *options, bf_user_data user_data, bf_error_func error_func) {
+    if (tokens == nullptr) {
+        return nullptr;
+    }
 
-bool bf_ast_operation_get_operation_type(bf_ast *ast, bf_ast_operation_type *type) { return false; }
+    const bf::tokens *tokens_object = reinterpret_cast<const bf::tokens *>(tokens);
 
-bool bf_ast_destroy(bf_ast *ast) { return false; }
+    bf::error_stream error_stream(user_data, error_func);
+    const bf::ast_options &resolved_options = options ? *options : bf::default_ast_options();
+    return bf::generate_ast(tokens_object, resolved_options, error_stream);
+}
+
+bool bf_ast_destroy(bf_ast *ast) {
+    if (ast == nullptr) {
+        return false;
+    }
+
+    bf::ast *ast_object = reinterpret_cast<bf::ast *>(ast);
+    delete ast_object;
+
+    return true;
+}
+
+bool bf_ast_get_root_node(const bf_ast *ast, bf_ast_node **root) {
+    if (ast == nullptr || root == nullptr) {
+        return false;
+    }
+
+    const bf::ast *ast_object = reinterpret_cast<const bf::ast *>(ast);
+    *root = ast_object->get_root();
+    return true;
+}
+
+bool bf_ast_node_get_type(const bf_ast_node *node, bf_ast_node_type *type) {
+    if (node == nullptr || type == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *ast_node_object = reinterpret_cast<const bf::ast_node *>(node);
+    *type = ast_node_object->get_type();
+    return true;
+}
+
+bool bf_ast_node_get_location(const bf_ast_node *node, bf_source_location *location) {
+    if (node == nullptr || location == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
+    *location = node_object->get_location();
+    return true;
+}
+
+bool bf_ast_node_sequence_get_child_count(const bf_ast_node *node, int *count) {
+    if (node == nullptr || count == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
+    if (node_object->get_type() != bf_ast_sequence) {
+        return false;
+    }
+
+    const bf::sequence_node *sequence_node = static_cast<const bf::sequence_node *>(node_object);
+    *count = sequence_node->get_child_count();
+    return true;
+}
+
+bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, bf_ast_node const **children) {
+    if (node == nullptr || first < 0 || count < 0 || children == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
+    if (node_object->get_type() != bf_ast_sequence) {
+        return false;
+    }
+
+    const bf::sequence_node *sequence_node = static_cast<const bf::sequence_node *>(node_object);
+    if (first + count > sequence_node->get_child_count()) {
+        return false;
+    }
+
+    for (int i = 0; i < count; i++) {
+        children[i] = sequence_node->get_child(first + i);
+    }
+
+    return true;
+}
+
+bool bf_ast_node_branch_get_child(const bf_ast_node *node, bf_ast_node const **child) {
+    if (node == nullptr || child == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
+    if (node_object->get_type() != bf_ast_branch) {
+        return false;
+    }
+
+    const bf::branch_node *branch_node = static_cast<const bf::branch_node *>(node_object);
+    *child = branch_node->get_child();
+    return true;
+}
+
+bool bf_ast_node_operation_get_operation_type(const bf_ast_node *node, bf_ast_operation_type *type) {
+    if (node == nullptr || type == nullptr) {
+        return false;
+    }
+
+    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
+    if (node_object->get_type() != bf_ast_branch) {
+        return false;
+    }
+
+    const bf::operation_node *operation_node = static_cast<const bf::operation_node *>(node_object);
+    *type = operation_node->get_operation_type();
+    return true;
+}
