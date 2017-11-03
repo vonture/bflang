@@ -71,7 +71,7 @@ class ast {
     std::unique_ptr<sequence_node> root_;
 };
 
-ast *generate_ast(const tokens *tokens, const ast_options &options, error_stream &error_stream);
+std::unique_ptr<ast> generate_ast(const tokens *tokens, const ast_options &options, error_stream &error_stream);
 } // namespace bf
 
 #endif // BFLIB_AST_H_

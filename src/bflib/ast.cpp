@@ -48,6 +48,10 @@ ast::ast(std::unique_ptr<sequence_node> root)
 
 sequence_node *ast::get_root() const { return root_.get(); }
 
-ast *generate_ast(const tokens *tokens, const ast_options &options, error_stream &error_stream) { return nullptr; }
+std::unique_ptr<ast> generate_ast(const tokens *tokens, const ast_options &options, error_stream &error_stream) {
+    std::unique_ptr<sequence_node> sequence = std::make_unique<sequence_node>();
+
+    return make_unique<ast>(std::move(sequence));
+}
 
 } // namespace bf
