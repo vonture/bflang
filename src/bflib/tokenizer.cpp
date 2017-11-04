@@ -12,7 +12,7 @@ void tokens::add_token(token_type type, source_location location) {
 }
 
 const token &tokens::get_token(int index) const {
-    assert(index >= 0 && index < tokens_.size());
+    assert(index >= 0 && static_cast<size_t>(index) < tokens_.size());
     return tokens_[index];
 }
 
@@ -59,12 +59,12 @@ tokens *tokenize(const char *program, const tokenizer_options &options, error_st
             break;
 
         case '.':
-            tokens->add_token(bf_token_input, cur_source_location);
+            tokens->add_token(bf_token_output, cur_source_location);
             cur_source_location.character++;
             break;
 
         case ',':
-            tokens->add_token(bf_token_output, cur_source_location);
+            tokens->add_token(bf_token_input, cur_source_location);
             cur_source_location.character++;
             break;
 

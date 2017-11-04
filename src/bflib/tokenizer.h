@@ -2,7 +2,7 @@
 #define BFLIB_TOKENIZER_H_
 
 #include "bflib.h"
-#include "error_stream.h"
+#include "stream.h"
 
 #include <vector>
 

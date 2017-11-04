@@ -75,8 +75,8 @@ TEST(tokenizer, token_types) {
     EXPECT_EQ(bf_token_dec_data_ptr, token_array[1].type);
     EXPECT_EQ(bf_token_inc_data_value, token_array[2].type);
     EXPECT_EQ(bf_token_dec_data_value, token_array[3].type);
-    EXPECT_EQ(bf_token_input, token_array[4].type);
-    EXPECT_EQ(bf_token_output, token_array[5].type);
+    EXPECT_EQ(bf_token_output, token_array[4].type);
+    EXPECT_EQ(bf_token_input, token_array[5].type);
     EXPECT_EQ(bf_token_loop_open, token_array[6].type);
     EXPECT_EQ(bf_token_loop_close, token_array[7].type);
 }
@@ -97,8 +97,8 @@ TEST(tokenizer, other_characters_ignored) {
     EXPECT_EQ(bf_token_dec_data_ptr, token_array[1].type);
     EXPECT_EQ(bf_token_inc_data_value, token_array[2].type);
     EXPECT_EQ(bf_token_dec_data_value, token_array[3].type);
-    EXPECT_EQ(bf_token_input, token_array[4].type);
-    EXPECT_EQ(bf_token_output, token_array[5].type);
+    EXPECT_EQ(bf_token_output, token_array[4].type);
+    EXPECT_EQ(bf_token_input, token_array[5].type);
     EXPECT_EQ(bf_token_loop_open, token_array[6].type);
     EXPECT_EQ(bf_token_loop_close, token_array[7].type);
 }

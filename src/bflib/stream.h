@@ -19,6 +19,28 @@ class error_stream {
     bf_error_func error_func_;
 };
 
+class input_stream {
+  public:
+    input_stream(bf_user_data user_data, bf_input_function input_func);
+
+    char read();
+
+  private:
+    bf_user_data user_data_;
+    bf_input_function input_func_;
+};
+
+class output_stream {
+  public:
+    output_stream(bf_user_data user_data, bf_output_function output_func);
+
+    void write(char c);
+
+  private:
+    bf_user_data user_data_;
+    bf_output_function output_func_;
+};
+
 } // namespace bf
 
 #endif // BFLIB_ERROR_STREAM_H_

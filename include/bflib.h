@@ -10,8 +10,8 @@ enum bf_token_type {
     bf_token_dec_data_ptr,   // <
     bf_token_inc_data_value, // +
     bf_token_dec_data_value, // -
-    bf_token_input,          // .
-    bf_token_output,         // ,
+    bf_token_output,         // .
+    bf_token_input,          // ,
     bf_token_loop_open,      // [
     bf_token_loop_close      // ]
 };
@@ -68,6 +68,16 @@ bool bf_ast_node_sequence_get_child_count(const bf_ast_node *node, int *count);
 bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, const bf_ast_node **children);
 bool bf_ast_node_operation_get_type(const bf_ast_node *node, bf_ast_operation_type *type);
 
+struct bf_interpreter_options {};
+
+typedef void bf_interpreter;
+typedef char (*bf_input_function)(bf_user_data user_data);
+typedef void (*bf_output_function)(bf_user_data user_data, char output);
+
+bf_interpreter *bf_create_interpreter(const bf_interpreter_options *options);
+bool bf_interpreter_destroy(bf_interpreter *interpreter);
+bool bf_interpreter_execute(const bf_interpreter *interpreter, const bf_ast *ast, bf_user_data user_data, bf_input_function input_func,
+                            bf_output_function output_func, bf_error_func error_func);
 #ifdef __cplusplus
 }
 #endif

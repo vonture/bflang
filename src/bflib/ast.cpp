@@ -23,7 +23,7 @@ sequence_node::sequence_node(const source_location &location)
 void sequence_node::add_child(std::unique_ptr<ast_node> child) { children_.push_back(std::move(child)); }
 
 const ast_node *sequence_node::get_child(int index) const {
-    assert(index >= 0 && index < children_.size());
+    assert(index >= 0 && static_cast<size_t>(index) < children_.size());
     return children_[index].get();
 }
 

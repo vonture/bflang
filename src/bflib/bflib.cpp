@@ -1,10 +1,9 @@
 #include "bflib.h"
 
 #include "ast.h"
-#include "error_stream.h"
+#include "interpreter.h"
+#include "stream.h"
 #include "tokenizer.h"
-
-#include <exception>
 
 bf_tokens *bf_tokenize(const char *program, const bf_tokenizer_options *options, bf_user_data user_data, bf_error_func error_func) {
     if (program == nullptr) {
@@ -156,5 +155,39 @@ bool bf_ast_node_operation_get_type(const bf_ast_node *node, bf_ast_operation_ty
 
     const bf::operation_node *operation_node = static_cast<const bf::operation_node *>(node_object);
     *type = operation_node->get_operation_type();
+    return true;
+}
+
+bf_interpreter *bf_create_interpreter(const bf_interpreter_options *options) {
+    const bf::interpreter_options &resolved_options = options ? *options : bf::default_interpreter_options();
+    return bf::create_interpreter(resolved_options).release();
+}
+
+bool bf_interpreter_destroy(bf_interpreter *interpreter) {
+    if (interpreter == nullptr) {
+        return false;
+    }
+
+    bf::interpreter *interpreter_object = reinterpret_cast<bf::interpreter *>(interpreter);
+    delete interpreter_object;
+
+    return true;
+}
+
+bool bf_interpreter_execute(const bf_interpreter *interpreter, const bf_ast *ast, bf_user_data user_data, bf_input_function input_func,
+                            bf_output_function output_func, bf_error_func error_func) {
+    if (interpreter == nullptr || ast == nullptr) {
+        return false;
+    }
+
+    const bf::interpreter *interpreter_object = reinterpret_cast<const bf::interpreter *>(interpreter);
+    const bf::ast *ast_object = reinterpret_cast<const bf::ast *>(ast);
+
+    std::unique_ptr<bf::interpreter_instance> interpreter_instance = interpreter_object->create_instance(ast_object);
+    bf::input_stream input_stream(user_data, input_func);
+    bf::output_stream output_stream(user_data, output_func);
+    bf::error_stream error_stream(user_data, error_func);
+    interpreter_instance->execute(input_stream, output_stream, error_stream);
+
     return true;
 }

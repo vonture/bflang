@@ -76,7 +76,7 @@ TEST(ast, basic_functionality) {
         EXPECT_TRUE(bf_ast_node_sequence_get_children(root, 0, expected_child_count, children.data()));
 
         std::array<std::pair<bf_ast_operation_type, bf_source_location>, expected_child_count> expected_child_operation_types{{
-            {bf_ast_operation_input, {0, 0}}, {bf_ast_operation_output, {0, 1}},
+            {bf_ast_operation_output, {0, 0}}, {bf_ast_operation_input, {0, 1}},
         }};
         for (int i = 0; i < expected_child_count; i++) {
             bf_ast_node_type node_type;
