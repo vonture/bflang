@@ -77,7 +77,7 @@ bool bf_ast_destroy(bf_ast *ast) {
     return true;
 }
 
-bool bf_ast_get_root_node(const bf_ast *ast, bf_ast_node **root) {
+bool bf_ast_get_root_node(const bf_ast *ast, const bf_ast_node **root) {
     if (ast == nullptr || root == nullptr) {
         return false;
     }
@@ -122,7 +122,7 @@ bool bf_ast_node_sequence_get_child_count(const bf_ast_node *node, int *count) {
     return true;
 }
 
-bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, bf_ast_node const **children) {
+bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, const bf_ast_node **children) {
     if (node == nullptr || first < 0 || count < 0 || children == nullptr) {
         return false;
     }
@@ -144,28 +144,13 @@ bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int c
     return true;
 }
 
-bool bf_ast_node_branch_get_child(const bf_ast_node *node, bf_ast_node const **child) {
-    if (node == nullptr || child == nullptr) {
-        return false;
-    }
-
-    const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
-    if (node_object->get_type() != bf_ast_branch) {
-        return false;
-    }
-
-    const bf::branch_node *branch_node = static_cast<const bf::branch_node *>(node_object);
-    *child = branch_node->get_child();
-    return true;
-}
-
-bool bf_ast_node_operation_get_operation_type(const bf_ast_node *node, bf_ast_operation_type *type) {
+bool bf_ast_node_operation_get_type(const bf_ast_node *node, bf_ast_operation_type *type) {
     if (node == nullptr || type == nullptr) {
         return false;
     }
 
     const bf::ast_node *node_object = reinterpret_cast<const bf::ast_node *>(node);
-    if (node_object->get_type() != bf_ast_branch) {
+    if (node_object->get_type() != bf_ast_operation) {
         return false;
     }
 

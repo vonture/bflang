@@ -39,17 +39,6 @@ class sequence_node : public ast_node {
     std::vector<std::unique_ptr<ast_node>> children_;
 };
 
-class branch_node : public ast_node {
-  public:
-    branch_node(const source_location &location);
-
-    void set_child(std::unique_ptr<sequence_node> child);
-    const sequence_node *get_child() const;
-
-  private:
-    std::unique_ptr<sequence_node> child_;
-};
-
 class operation_node : public ast_node {
   public:
     operation_node(const source_location &location, ast_operation_type type);

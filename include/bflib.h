@@ -41,7 +41,6 @@ bool bf_tokens_get_tokens(const bf_tokens *tokens, int first, int count, bf_toke
 
 enum bf_ast_node_type {
     bf_ast_sequence,
-    bf_ast_branch,
     bf_ast_operation,
 };
 
@@ -61,14 +60,13 @@ typedef void bf_ast_node;
 
 bf_ast *bf_generate_ast(const bf_tokens *tokens, const bf_ast_options *options, bf_user_data user_data, bf_error_func error_func);
 bool bf_ast_destroy(bf_ast *ast);
-bool bf_ast_get_root_node(const bf_ast *ast, bf_ast_node **root);
+bool bf_ast_get_root_node(const bf_ast *ast, const bf_ast_node **root);
 
 bool bf_ast_node_get_type(const bf_ast_node *node, bf_ast_node_type *type);
 bool bf_ast_node_get_location(const bf_ast_node *node, bf_source_location *location);
 bool bf_ast_node_sequence_get_child_count(const bf_ast_node *node, int *count);
-bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, bf_ast_node const **children);
-bool bf_ast_node_branch_get_child(const bf_ast_node *node, bf_ast_node const **child);
-bool bf_ast_node_operation_get_operation_type(const bf_ast_node *node, bf_ast_operation_type *type);
+bool bf_ast_node_sequence_get_children(const bf_ast_node *node, int first, int count, const bf_ast_node **children);
+bool bf_ast_node_operation_get_type(const bf_ast_node *node, bf_ast_operation_type *type);
 
 #ifdef __cplusplus
 }

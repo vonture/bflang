@@ -18,6 +18,10 @@ const token &tokens::get_token(int index) const {
 
 int tokens::get_tokens_count() const { return tokens_.size(); }
 
+tokens::const_iterator tokens::begin() const { return tokens_.begin(); }
+
+tokens::const_iterator tokens::end() const { return tokens_.end(); }
+
 tokenizer_options default_tokenizer_options() {
     tokenizer_options options;
     return options;

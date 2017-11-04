@@ -20,6 +20,10 @@ class tokens {
     const token &get_token(int index) const;
     int get_tokens_count() const;
 
+    using const_iterator = std::vector<token>::const_iterator;
+    const_iterator begin() const;
+    const_iterator end() const;
+
   private:
     std::vector<token> tokens_;
 };
